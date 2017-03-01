@@ -9,11 +9,11 @@
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="RQS.jar" size="60982" download="eager" />
-    <jar href="lib/itext-pdfa-5.5.10.jar" size="125539" download="eager" />
-    <jar href="lib/itext7-pdftest-7.0.2.jar" size="22861" download="eager" />
-    <jar href="lib/itextpdf-5.5.10.jar" size="2392932" download="eager" />
-    <jar href="lib/mysql-connector-java-5.1.23-bin.jar" size="860506" download="eager" />
+    <jar href="RQS.jar" size="61507" download="eager" />
+    <jar href="lib/itext-pdfa-5.5.10.jar" size="125538" download="eager" />
+    <jar href="lib/itext7-pdftest-7.0.2.jar" size="22865" download="eager" />
+    <jar href="lib/itextpdf-5.5.10.jar" size="2392931" download="eager" />
+    <jar href="lib/mysql-connector-java-5.1.23-bin.jar" size="860508" download="eager" />
   </resources>
 <security>
   <all-permissions/>

@@ -179,7 +179,11 @@ public class CreatePDF {
         cell = new PdfPCell(transitInformationSection());
         cell.setPaddingTop(10f);
         cell.setPaddingBottom(10f);
-        cell.setColspan(2);
+        table.addCell(cell);
+        
+        cell = new PdfPCell(rateInformationSection());
+        cell.setPaddingTop(10f);
+        cell.setPaddingBottom(10f);
         table.addCell(cell);
 
         document.addHeader("Header", "This is the header");
@@ -268,6 +272,14 @@ public class CreatePDF {
         PdfPTable table = new PdfPTable(new float[]{1, 5});
         PdfPCell cell;
 
+        cell = new PdfPCell(new Paragraph("Trade Lane:", BOLD_FONT));
+        cell.setBorder(NO_BORDER);
+        table.addCell(cell);
+        
+        cell = new PdfPCell(new Paragraph(tradeLane, NORMAL_FONT));
+        cell.setBorder(NO_BORDER);
+        table.addCell(cell);
+        
         cell = new PdfPCell(new Paragraph("Load/Discharge Ports:", BOLD_FONT));
         cell.setBorder(NO_BORDER);
         table.addCell(cell);
@@ -292,6 +304,27 @@ public class CreatePDF {
             table.addCell(cell);
         }
 
+        return table;
+    }
+    
+    private PdfPTable rateInformationSection(){
+        PdfPTable table = new PdfPTable(new float[]{1, 5});
+        PdfPCell cell;
+        
+        cell = new PdfPCell(new Paragraph("Base OFT:", BOLD_FONT));
+        cell.setBorder(NO_BORDER);
+        table.addCell(cell);
+        
+        cell = new PdfPCell(new Paragraph(oftCurrency + oft + " per " + oftUnit , NORMAL_FONT));
+        cell.setBorder(NO_BORDER);
+        table.addCell(cell);
+        
+        cell = new PdfPCell(new Paragraph("Subject to", SECTION_SUBHEADING));
+        cell.setBorder(NO_BORDER);
+        cell.setColspan(2);
+        table.addCell(cell);
+        
+        
         return table;
     }
 }

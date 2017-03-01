@@ -160,17 +160,17 @@
                                           <ToggleGroup fx:id="overseasApprovalGroup" />
                                        </toggleGroup>
                                     </RadioButton>
-                                    <RadioButton fx:id="vesselScheduleYesRadioButton" layoutX="91.0" layoutY="60.0" mnemonicParsing="false" text="Yes">
+                                    <RadioButton fx:id="vesselScheduleYesRadioButton" layoutX="91.0" layoutY="60.0" mnemonicParsing="false" text="Yes" textAlignment="JUSTIFY">
                                        <toggleGroup>
                                           <ToggleGroup fx:id="vesselScheduleApprovalGroup" />
                                        </toggleGroup>
                                     </RadioButton>
                                     <RadioButton fx:id="operationalApprovalNoRadioButton" layoutX="141.0" layoutY="5.0" mnemonicParsing="false" text="No" toggleGroup="$operationalApprovalGroup" />
                                     <RadioButton fx:id="overseasApprovalNoRadioButton" layoutX="141.0" layoutY="32.0" mnemonicParsing="false" text="No" toggleGroup="$overseasApprovalGroup" />
-                                    <RadioButton fx:id="vesselScheduleNoRadioButton" layoutX="141.0" layoutY="60.0" mnemonicParsing="false" text="No" toggleGroup="$vesselScheduleApprovalGroup" />
+                                    <RadioButton fx:id="vesselScheduleNoRadioButton" layoutX="141.0" layoutY="60.0" mnemonicParsing="false" text="No" textAlignment="JUSTIFY" toggleGroup="$vesselScheduleApprovalGroup" />
                                     <RadioButton fx:id="operationalApprovalPendingRadioButton" layoutX="183.0" layoutY="5.0" mnemonicParsing="false" text="Pending" toggleGroup="$operationalApprovalGroup" />
                                     <RadioButton fx:id="overseasApprovalPendingRadioButton" layoutX="183.0" layoutY="32.0" mnemonicParsing="false" text="Pending" toggleGroup="$overseasApprovalGroup" />
-                                    <RadioButton fx:id="vesselSchedulePendingRadioButton" layoutX="183.0" layoutY="60.0" mnemonicParsing="false" text="Pending" toggleGroup="$vesselScheduleApprovalGroup" />
+                                    <RadioButton fx:id="vesselSchedulePendingRadioButton" layoutX="183.0" layoutY="60.0" mnemonicParsing="false" text="Pending" textAlignment="JUSTIFY" toggleGroup="$vesselScheduleApprovalGroup" />
                                  </children>
                               </AnchorPane>
                            </content>
