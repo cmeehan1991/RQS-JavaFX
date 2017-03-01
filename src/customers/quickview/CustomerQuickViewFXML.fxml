@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox id="AnchorPane" prefHeight="277.0" prefWidth="600.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="customers.quickview.CustomerQuickViewFXMLController">
+    <ScrollPane> 
+   <content>
+      <GridPane prefHeight="273.0" prefWidth="598.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="513.0" minWidth="10.0" prefWidth="513.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="224.0" minWidth="10.0" prefWidth="84.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints maxHeight="128.0" minHeight="1.0" prefHeight="49.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="357.0" minHeight="10.0" prefHeight="177.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="357.0" minHeight="10.0" prefHeight="58.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <TableView id="customerQuickViewTable" fx:id="customerQuickViewTable" onMouseClicked="#getDoubleClick" prefHeight="149.0" prefWidth="598.0" GridPane.columnSpan="2" GridPane.rowIndex="1">
+              <columns>
+                <TableColumn fx:id="companyIDColumn" editable="false" prefWidth="75.0" text="ID" />
+                  <TableColumn fx:id="companyNameColumn" editable="false" prefWidth="281.0" text="Company Name" />
+                  <TableColumn fx:id="primaryContactColumn" editable="false" prefWidth="241.0" text="Primary Contact" />
+              </columns>
+            </TableView>
+            <TextField GridPane.valignment="CENTER">
+               <GridPane.margin>
+                  <Insets left="10.0" />
+               </GridPane.margin>
+            </TextField>
+            <Button mnemonicParsing="false" text="Search" GridPane.columnIndex="1" />
+            <Button mnemonicParsing="false" onAction="#getSubmitButton" text="Select" GridPane.rowIndex="2">
+               <GridPane.margin>
+                  <Insets left="10.0" />
+               </GridPane.margin>
+            </Button>
+         </children>
+      </GridPane>
+   </content>
+   </ScrollPane>
+</VBox>

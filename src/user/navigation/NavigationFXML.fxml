@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<ScrollPane prefWidth="200" prefHeight="400" xmlns:fx="http://javafx.com/fxml/1" fx:controller="user.navigation.NavigationFXMLController"  styleClass="root">
+    <Accordion prefWidth="199" prefHeight="100">
+        <panes>
+            <TitledPane fx:id="userInfoPane" text="User Info">
+                <content>
+                    <GridPane hgap="10" vgap="5">
+                        <padding>
+                            <Insets top="10" bottom="10" left="10" right="10" />
+                        </padding>
+                        <Hyperlink
+                            GridPane.columnIndex="0" 
+                            GridPane.rowIndex="0"
+                            text="User Information"
+                            fx:id="userInfo"
+                            id="userInfo"
+                            onAction="#openWindow"/>
+                        <Hyperlink
+                            GridPane.columnIndex="0" 
+                            GridPane.rowIndex="1"
+                            text="Messenger"
+                            fx:id="messenger"
+                            id="messenger"
+                            onAction="#openWindow"/>
+                    </GridPane>
+                </content>
+            </TitledPane>
+            <TitledPane fx:id="quotesPane" text="Quoting">
+                <content>
+                    <GridPane hgap="10" vgap="5">
+                        <padding>
+                            <Insets top="10" bottom="10" left="10" right="10" />
+                        </padding>
+                        <Hyperlink
+                            GridPane.columnIndex="0" 
+                            GridPane.rowIndex="0"
+                            text="New Quote"
+                            fx:id="newQuote"
+                            id="newQuote"
+                            onAction="#openWindow"/>
+                         <Hyperlink
+                            GridPane.columnIndex="0" 
+                            GridPane.rowIndex="1"
+                            text="Update Quote"
+                            fx:id="updateQuote"
+                            id="updateQuote"
+                            onAction="#openWindow"/>
+                         <Hyperlink
+                            GridPane.columnIndex="0" 
+                            GridPane.rowIndex="2"
+                            text="Publish Quote"
+                            fx:id="publishQuote"
+                            id="publishQuote"
+                            onAction="#openWindow"/>
+                    </GridPane>
+                </content>
+            </TitledPane>
+            <TitledPane fx:id="customerPane" text="Customer Center">
+                <content>
+                    <GridPane hgap="10" vgap="5">
+                        <padding>
+                            <Insets top="10" bottom="10" left="10" right="10" />
+                        </padding>
+                        <Hyperlink
+                            GridPane.columnIndex="0" 
+                            GridPane.rowIndex="0"
+                            text="New Customer"
+                            fx:id="newCustomer"
+                            id="newCustomer"
+                            onAction="#openWindow"/>
+                        <Hyperlink
+                            GridPane.columnIndex="0" 
+                            GridPane.rowIndex="1"
+                            text="View Customer"
+                            fx:id="viewCustomer"
+                            id="viewCustomer"
+                            onAction="#openWindow"/>
+                         
+                    </GridPane>
+                </content>
+            </TitledPane>
+            <TitledPane fx:id="queryPane" text="Query Manager">
+                <content>
+                    <GridPane hgap="10" vgap="5">
+                        <padding>
+                            <Insets top="10" bottom="10" left="10" right="10" />
+                        </padding>
+                        <Hyperlink
+                            GridPane.columnIndex="0" 
+                            GridPane.rowIndex="0"
+                            text="Query Manager"
+                            fx:id="queryManager"
+                            id="queryManager"
+                            onAction="#openWindow"/>
+                         
+                    </GridPane>
+                </content>
+            </TitledPane>
+        </panes>
+    </Accordion>
+</ScrollPane>

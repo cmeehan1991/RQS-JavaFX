@@ -1,0 +1,480 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<AnchorPane prefHeight="510.0" prefWidth="932.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="user.newquote.NewQuoteFXMLController">
+    <children>
+        <MenuBar fx:id="menuBar" prefHeight="29.0" prefWidth="932.0">
+            <menus>
+                <Menu text="File">
+                    <MenuItem text="New" />
+                    <MenuItem text="Open" />
+                    <SeparatorMenuItem />
+                    <MenuItem text="Close" />
+                </Menu>
+            </menus>
+        </MenuBar>
+        <TabPane layoutX="4.0" layoutY="69.0" prefHeight="439.0" prefWidth="925.0" tabClosingPolicy="UNAVAILABLE">
+            <tabs>
+                <Tab text="General Information">
+                    <content>
+                        <AnchorPane prefHeight="397.0" prefWidth="817.0">
+                            <children>
+                                <TitledPane collapsible="false" layoutX="14.0" layoutY="14.0" text="Customer Information">
+                                    <content>
+                                        <AnchorPane prefHeight="104.0" prefWidth="552.0">
+                                            <children>
+                                                <TextField fx:id="contactNameTextField" layoutX="250.0" layoutY="10.0" promptText="Customer Name" />
+                                                <TextField fx:id="contactEmailTextField" layoutX="429.0" layoutY="10.0" promptText="Contact Email" />
+                                                <ComboBox fx:id="companyNameComboBox" editable="true" layoutX="14.0" layoutY="10.0" prefHeight="27.0" prefWidth="224.0" promptText="Company" />
+                                                <TextField fx:id="contactPhoneTextField" layoutX="14.0" layoutY="56.0" promptText="Phone" />
+                                                <TextField fx:id="phoneExtensionTextField" layoutX="189.0" layoutY="56.0" promptText="Extension" />
+                                                <ComboBox fx:id="phoneTypeComboBox" layoutX="363.0" layoutY="56.0" value="N/A">
+                                                    <items>
+                                                        <FXCollections fx:factory="observableArrayList">
+                                                            <String fx:value="Office" />
+                                                            <String fx:value="Mobile" />
+                                                            <String fx:value="Main" />
+                                                            <String fx:value="Other" />
+                                                        </FXCollections>
+                                                    </items>
+                                                </ComboBox>
+                                            </children>
+                                        </AnchorPane>
+                                    </content>
+                                </TitledPane>
+                                <TitledPane collapsible="false" layoutX="14.0" layoutY="299.0" text="Port Information">
+                                    <content>
+                                        <GridPane hgap="5" vgap="5">
+                                            <Label text="Trade Lane:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                                            <ComboBox fx:id="tradeLaneComboBox" promptText="Choose One" value="N/A" GridPane.columnIndex="1" GridPane.rowIndex="0">
+                                                <items>
+                                                    <FXCollections fx:factory="observableArrayList">
+                                                        <String fx:value="ECAMS NB" />
+                                                        <String fx:value="ECAMS SB" />
+                                                        <String fx:value="NAS EB" />
+                                                        <String fx:value="NAS WB" />
+                                                        <String fx:value="NAX EB" />
+                                                        <String fx:value="NAX WB" />
+                                                        <String fx:value="TAL EB" />
+                                                        <String fx:value="TAL WB" />
+                                                        <String fx:value="Foreign to Foreign" />
+                                                    </FXCollections>
+                                                </items>
+                                            </ComboBox>
+                                            <Label text="POL:" GridPane.columnIndex="2" GridPane.rowIndex="0" />    
+                                            <TextField fx:id="polTextField" prefHeight="27.0" prefWidth="108.0" GridPane.columnIndex="3" GridPane.rowIndex="0" />    
+                                            <Label text="POD:" GridPane.columnIndex="4" GridPane.rowIndex="0" />    
+                                            <TextField fx:id="podTextField" prefHeight="27.0" prefWidth="108.0" GridPane.columnIndex="5" GridPane.rowIndex="0" />    
+                                            <Label text="TSHP:" GridPane.columnIndex="6" GridPane.rowIndex="0" />    
+                                            <TextField fx:id="tshpTextField" prefHeight="27.0" prefWidth="105.0" GridPane.columnIndex="7" GridPane.rowIndex="0" />
+                                            <columnConstraints>
+                                                <ColumnConstraints />
+                                                <ColumnConstraints />
+                                                <ColumnConstraints />
+                                                <ColumnConstraints />
+                                                <ColumnConstraints />
+                                                <ColumnConstraints />
+                                                <ColumnConstraints />
+                                                <ColumnConstraints />
+                                            </columnConstraints>
+                                            <rowConstraints>
+                                                <RowConstraints />
+                                            </rowConstraints>
+                                        </GridPane>
+                                    </content>
+                                </TitledPane>
+                                <TitledPane collapsible="false" layoutX="14.0" layoutY="160.0" prefHeight="115.0" prefWidth="713.0" text="Commodity Information">
+                                    <content>
+                                        <AnchorPane>
+                                            <Label layoutX="14.0" layoutY="19.0" text="Commodity Class" />
+                                            <ComboBox fx:id="commodityClassComboBox" layoutX="134.0" layoutY="14.0" promptText="Choose One" value="N/A">
+                                                <items>
+                                                    <FXCollections fx:factory="observableArrayList">
+                                                        <String fx:value="POV (up to 14 cbm)" />
+                                                        <String fx:value="POV (up to 14.1-16 cbm)" />
+                                                        <String fx:value="POV (up to 16.1-20 cbm)" />
+                                                        <String fx:value="POV (up to 20.1-25 cbm)" />
+                                                        <String fx:value="POV (up to 14 cbm)" />
+                                                        <String fx:value="POV (up to 14 cbm)" />
+                                                        <String fx:value="Construction Equipment" />
+                                                        <String fx:value="Mining Equipment" />
+                                                    </FXCollections>
+                                                </items>
+                                            </ComboBox>
+                                            <Label layoutX="345.0" layoutY="19.0" text="Handling Instructions:" />
+                                            <ComboBox fx:id="handlingInstructionsComboBox" layoutX="480.0" layoutY="14.0" promptText="Choose One" value="N/A">
+                                                <items>
+                                                    <FXCollections fx:factory="observableArrayList">
+                                                        <String fx:value="Self Propelled" />
+                                                        <String fx:value="Towable" />
+                                                        <String fx:value="Static" />
+                                                        <String fx:value="Forkliftable" />
+                                                        <String fx:value="Break-bulk" />
+                                                        <String fx:value="Static (MAFI)" />
+                                                        <String fx:value="Static (Forkliftable)" />
+                                                    </FXCollections>
+                                                </items>
+                                            </ComboBox>
+                                            <Label layoutX="47.0" layoutY="53.0" text="Description:" />
+                                            <TextField fx:id="commodityDescriptionTextField" layoutX="134.0" layoutY="48.0" prefHeight="27.0" prefWidth="512.0" />
+                                        </AnchorPane>
+                                    </content>
+                                </TitledPane>
+                        <TitledPane layoutX="647.0" layoutY="14.0" prefHeight="132.0" prefWidth="280.0" text="Quote Status">
+                           <content>
+                              <AnchorPane prefHeight="104.0" prefWidth="278.0">
+                                 <children>
+                                    <Label layoutX="12.0" layoutY="5.0" text="Ops/MTD:" />
+                                    <Label layoutX="12.0" layoutY="32.0" text="Overseas:" />
+                                    <Label layoutX="12.0" layoutY="60.0" text="Scheduling:" />
+                                    <RadioButton fx:id="operationalApprovalYesRadioButton" layoutX="91.0" layoutY="5.0" mnemonicParsing="false" text="Yes">
+                                       <toggleGroup>
+                                          <ToggleGroup fx:id="operationalApprovalGroup" />
+                                       </toggleGroup>
+                                    </RadioButton>
+                                    <RadioButton fx:id="overseasApprovalYesRadioButton" layoutX="91.0" layoutY="32.0" mnemonicParsing="false" text="Yes">
+                                       <toggleGroup>
+                                          <ToggleGroup fx:id="overseasApprovalGroup" />
+                                       </toggleGroup>
+                                    </RadioButton>
+                                    <RadioButton fx:id="vesselScheduleYesRadioButton" layoutX="91.0" layoutY="60.0" mnemonicParsing="false" text="Yes">
+                                       <toggleGroup>
+                                          <ToggleGroup fx:id="vesselScheduleApprovalGroup" />
+                                       </toggleGroup>
+                                    </RadioButton>
+                                    <RadioButton fx:id="operationalApprovalNoRadioButton" layoutX="141.0" layoutY="5.0" mnemonicParsing="false" text="No" toggleGroup="$operationalApprovalGroup" />
+                                    <RadioButton fx:id="overseasApprovalNoRadioButton" layoutX="141.0" layoutY="32.0" mnemonicParsing="false" text="No" toggleGroup="$overseasApprovalGroup" />
+                                    <RadioButton fx:id="vesselScheduleNoRadioButton" layoutX="141.0" layoutY="60.0" mnemonicParsing="false" text="No" toggleGroup="$vesselScheduleApprovalGroup" />
+                                    <RadioButton fx:id="operationalApprovalPendingRadioButton" layoutX="183.0" layoutY="5.0" mnemonicParsing="false" text="Pending" toggleGroup="$operationalApprovalGroup" />
+                                    <RadioButton fx:id="overseasApprovalPendingRadioButton" layoutX="183.0" layoutY="32.0" mnemonicParsing="false" text="Pending" toggleGroup="$overseasApprovalGroup" />
+                                    <RadioButton fx:id="vesselSchedulePendingRadioButton" layoutX="183.0" layoutY="60.0" mnemonicParsing="false" text="Pending" toggleGroup="$vesselScheduleApprovalGroup" />
+                                 </children>
+                              </AnchorPane>
+                           </content>
+                        </TitledPane>
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </Tab>
+                <Tab text="Quote Information">
+                    <content>
+                        <AnchorPane prefHeight="415.0" prefWidth="925.0">
+                            <children>
+                           
+                                <TitledPane collapsible="false" layoutX="14.0" layoutY="14.0" prefHeight="260.0" prefWidth="750.0" text="Rate Quote">
+                                    <content>
+                              <AnchorPane prefHeight="232.0" prefWidth="895.0">
+                                 <children>
+                                               <!-- OFT Row-->
+                                               <Label layoutX="11.0" layoutY="24.0" text="OFT:" />
+                                               <ComboBox fx:id="oftCurrencyComboBox" layoutX="44.0" layoutY="19.0" value="N/A">
+                                                   <items>
+                                                       <FXCollections fx:factory="observableArrayList">
+                                                           <String fx:value="USD" />
+                                                           <String fx:value="EUR" />
+                                                           <String fx:value="GBP" />
+                                                           <String fx:value="JPY" />
+                                                           <String fx:value="BRL" />
+                                                       </FXCollections>
+                                                   </items>
+                                               </ComboBox>
+                                               <TextField fx:id="oftTextField" layoutX="122.0" layoutY="19.0" prefHeight="27.0" prefWidth="82.0" />
+                                               <ComboBox fx:id="oftUnitComboBox" layoutX="205.0" layoutY="19.0" value="N/A">
+                                                   <items>
+                                                       <FXCollections fx:factory="observableArrayList">
+                                                           <String fx:value="N/A" />
+                                                           <String fx:value="W/M" />
+                                                           <String fx:value="Unit" />
+                                                           <String fx:value="CBM" />
+                                                           <String fx:value="Metric Ton" />
+                                                           <String fx:value="Short Ton" />
+                                                           <String fx:value="LB" />
+                                                           <String fx:value="KG" />
+                                                           <String fx:value="Linear Foot" />
+                                                           <String fx:value="40 Cubic Feet" />
+                                                           <String fx:value="FAS" />
+                                                           <String fx:value="Subject to Local Charges" />
+                                                       </FXCollections>
+                                                   </items>
+                                               </ComboBox>
+                                               <CheckBox fx:id="mafiMinimumCheckBox" layoutX="416.0" layoutY="23.0" text="MAFI Minimum" />
+                                               <ComboBox fx:id="mafiMinimumCurrencyComboBox" layoutX="531.0" layoutY="19.0" value="N/A">
+                                                   <items>
+                                                       <FXCollections fx:factory="observableArrayList">
+                                                           <String fx:value="USD" />
+                                                           <String fx:value="EUR" />
+                                                           <String fx:value="GBP" />
+                                                           <String fx:value="JPY" />
+                                                           <String fx:value="BRL" />
+                                                       </FXCollections>
+                                                   </items>
+                                               </ComboBox> 
+                                               <TextField fx:id="mafiMinimumTextField" layoutX="620.0" layoutY="19.0" prefHeight="27.0" prefWidth="111.0" />
+                                               <!--BAF Row-->                        
+                                               <Label layoutX="12.0" layoutY="59.0" text="BAF:" />
+                                               <ComboBox fx:id="bafCurrencyComboBox" layoutX="44.0" layoutY="53.0" value="N/A">
+                                                   <items>
+                                                       <FXCollections fx:factory="observableArrayList">
+                                                           <String fx:value="N/A" />
+                                                           <String fx:value="USD" />
+                                                           <String fx:value="EUR" />
+                                                           <String fx:value="GBP" />
+                                                           <String fx:value="JPY" />
+                                                           <String fx:value="BRL" />
+                                                       </FXCollections>
+                                                   </items>
+                                               </ComboBox>
+                                               <TextField fx:id="bafTextField" layoutX="122.0" layoutY="52.0" prefHeight="27.0" prefWidth="82.0" />
+                                               <ComboBox fx:id="bafUnitComboBox" layoutX="205.0" layoutY="54.0" onAction="#disableCurrency" value="N/A">
+                                                   <items>
+                                                       <FXCollections fx:factory="observableArrayList">
+                                                           <String fx:value="N/A" />
+                                                           <String fx:value="%" />
+                                                           <String fx:value="W/M" />
+                                                           <String fx:value="Unit" />
+                                                           <String fx:value="CBM" />
+                                                           <String fx:value="Metric Ton" />
+                                                           <String fx:value="Short Ton" />
+                                                           <String fx:value="LB" />
+                                                           <String fx:value="KG" />
+                                                           <String fx:value="Linear Foot" />
+                                                           <String fx:value="40 Cubic Feet" />
+                                                           <String fx:value="FAS" />
+                                                           <String fx:value="Subject to Local Charges" />
+                                                       </FXCollections>
+                                                   </items>
+                                               </ComboBox>
+                                               <CheckBox fx:id="bafIncludedCheckBox" layoutX="416.0" layoutY="56.0" text="Included" />
+                                               <!--ECA Row-->
+                                               <Label layoutX="11.0" layoutY="95.0" text="ECA:" />
+                                               <ComboBox fx:id="ecaCurrencyComboBox" layoutX="44.0" layoutY="89.0" value="N/A">
+                                                   <items>
+                                                       <FXCollections fx:factory="observableArrayList">
+                                                           <String fx:value="N/A" />
+                                                           <String fx:value="USD" />
+                                                           <String fx:value="EUR" />
+                                                           <String fx:value="GBP" />
+                                                           <String fx:value="JPY" />
+                                                           <String fx:value="BRL" />
+                                                       </FXCollections>
+                                                   </items>
+                                               </ComboBox>
+                                               <TextField fx:id="ecaTextField" layoutX="122.0" layoutY="89.0" prefWidth="82.0" />
+                                               <ComboBox fx:id="ecaUnitComboBox" layoutX="205.0" layoutY="89.0" value="N/A">
+                                                   <items>
+                                                       <FXCollections fx:factory="observableArrayList">
+                                                           <String fx:value="N/A" />
+                                                           <String fx:value="%" />
+                                                           <String fx:value="W/M" />
+                                                           <String fx:value="Unit" />
+                                                           <String fx:value="CBM" />
+                                                           <String fx:value="Metric Ton" />
+                                                           <String fx:value="Short Ton" />
+                                                           <String fx:value="LB" />
+                                                           <String fx:value="KG" />
+                                                           <String fx:value="Linear Foot" />
+                                                           <String fx:value="40 Cubic Feet" />
+                                                           <String fx:value="FAS" />
+                                                           <String fx:value="Subject to Local Charges" />
+                                                       </FXCollections>
+                                                   </items>
+                                               </ComboBox>
+                                               <CheckBox fx:id="ecaIncludedCheckBox" layoutX="416.0" layoutY="93.0" text="Included" />
+                                               <!-- THC Row -->
+                                               <Label layoutX="10.0" layoutY="128.0" text="THC:" />
+                                               <ComboBox fx:id="thcCurrencyComboBox" layoutX="44.0" layoutY="123.0" value="N/A">
+                                                   <items>
+                                                       <FXCollections fx:factory="observableArrayList">
+                                                           <String fx:value="N/A" />
+                                                           <String fx:value="USD" />
+                                                           <String fx:value="EUR" />
+                                                           <String fx:value="GBP" />
+                                                           <String fx:value="JPY" />
+                                                           <String fx:value="BRL" />
+                                                       </FXCollections>
+                                                   </items>
+                                               </ComboBox>
+                                               <TextField fx:id="thcTextField" layoutX="122.0" layoutY="123.0" prefWidth="82.0" />
+                                               <ComboBox fx:id="thcUnitComboBox" layoutX="205.0" layoutY="155.0" value="N/A">
+                                                   <items>
+                                                       <FXCollections fx:factory="observableArrayList">
+                                                           <String fx:value="N/A" />
+                                                           <String fx:value="%" />
+                                                           <String fx:value="W/M" />
+                                                           <String fx:value="Unit" />
+                                                           <String fx:value="CBM" />
+                                                           <String fx:value="Metric Ton" />
+                                                           <String fx:value="Short Ton" />
+                                                           <String fx:value="LB" />
+                                                           <String fx:value="KG" />
+                                                           <String fx:value="Linear Foot" />
+                                                           <String fx:value="40 Cubic Feet" />
+                                                           <String fx:value="FAS" />
+                                                           <String fx:value="Subject to Local Charges" />
+                                                       </FXCollections>
+                                                   </items>
+                                               </ComboBox>
+                                               <CheckBox fx:id="thcIncludedCheckBox" layoutX="416.0" layoutY="126.0" text="Included" />
+                                               <CheckBox fx:id="thcAttachedCheckBox" layoutX="501.0" layoutY="126.0" text="Attached to Email" />
+                                               <!--WFG Row-->
+                                               <Label layoutX="11.0" layoutY="160.0" text="WFG" />
+                                               <ComboBox fx:id="wfgCurrencyComboBox" layoutX="46.0" layoutY="155.0" value="N/A">
+                                                   <items>
+                                                       <FXCollections fx:factory="observableArrayList">
+                                                           <String fx:value="N/A" />
+                                                           <String fx:value="USD" />
+                                                           <String fx:value="EUR" />
+                                                           <String fx:value="GBP" />
+                                                           <String fx:value="JPY" />
+                                                           <String fx:value="BRL" />
+                                                       </FXCollections>
+                                                   </items>
+                                               </ComboBox>
+                                               <TextField fx:id="wfgTextField" layoutX="122.0" layoutY="156.0" prefHeight="27.0" prefWidth="82.0" />
+                                               <ComboBox fx:id="wfgUnitComboBox" layoutX="205.0" layoutY="123.0" value="N/A">
+                                                   <items>
+                                                       <FXCollections fx:factory="observableArrayList">
+                                                           <String fx:value="N/A" />
+                                                           <String fx:value="%" />
+                                                           <String fx:value="W/M" />
+                                                           <String fx:value="Unit" />
+                                                           <String fx:value="CBM" />
+                                                           <String fx:value="Metric Ton" />
+                                                           <String fx:value="Short Ton" />
+                                                           <String fx:value="LB" />
+                                                           <String fx:value="KG" />
+                                                           <String fx:value="Linear Foot" />
+                                                           <String fx:value="40 Cubic Feet" />
+                                                           <String fx:value="FAS" />
+                                                           <String fx:value="Subject to Local Charges" />
+                                                       </FXCollections>
+                                                   </items>
+                                               </ComboBox>
+                                               <CheckBox fx:id="wfgIncludedCheckBox" layoutX="416.0" layoutY="159.0" text="Included" />
+                                               <CheckBox fx:id="wfgAttachedCheckBox" layoutX="501.0" layoutY="159.0" text="Attached to Email" />
+                                                <Label layoutX="10.0" layoutY="189.0" text="Doc Fee:" />
+                                                <ComboBox fx:id="docFeeComboBox" layoutX="71.0" layoutY="184.0" value="N/A">
+                                                    <items>
+                                                        <FXCollections fx:factory="observableArrayList">
+                                                            <String fx:value="$25 per B/L" />
+                                                            <String fx:value="$50 per B/L" />
+                                                            <String fx:value="$75 per B/L" />
+                                                        </FXCollections>
+                                                    </items>
+                                                </ComboBox>
+                                                <CheckBox fx:id="docFeeIncludedCheckBox" layoutX="353.0" layoutY="189.0" text="Included" />
+                                                <Label layoutX="205.0" layoutY="189.0" text="War Risk:" />
+                                                <ComboBox fx:id="warRiskComboBox" layoutX="265.0" layoutY="184.0" value="N/A">
+                                                    <items>
+                                                        <FXCollections fx:factory="observableArrayList">
+                                                            <String fx:value="Israel" />
+                                                        </FXCollections>
+                                                    </items>
+                                                </ComboBox>
+                                 </children>
+                              </AnchorPane>
+                                    </content>
+                                </TitledPane>
+                                <TitledPane collapsible="false" layoutX="14.0" layoutY="287.0" prefHeight="104.0" prefWidth="436.0" text="Rate Type">
+                                    <content>
+                              <AnchorPane>
+                                 <children>
+                                               <CheckBox fx:id="tariffTypeCheckBox" layoutX="9.0" layoutY="14.0" text="Tariff" />
+                                               <CheckBox fx:id="spotTypeCheckBox" layoutX="78.0" layoutY="14.0" text="Spot" />
+                                               <CheckBox fx:id="contractTypeCheckBox" layoutX="139.0" layoutY="14.0" text="Contract" />
+                                               <CheckBox fx:id="bookingTypeCheckBox" layoutX="159.0" layoutY="40.0" text="Booking" />
+                                               <TextField fx:id="bookingNumberTextField" layoutX="233.0" layoutY="36.0" prefHeight="27.0" prefWidth="100.0" promptText="Bk. #" />
+                                               <CheckBox fx:id="ftfTypeCheckBox" layoutX="227.0" layoutY="14.0" text="Foriegn to Foreign" />
+                                               <CheckBox fx:id="declineTypeCheckBox" layoutX="9.0" layoutY="40.0" text="Decline" />
+                                               <ComboBox fx:id="reasonForDeclineComboBox" layoutX="79.0" layoutY="36.0" value="N/A">
+                                                   <items>
+                                                       <FXCollections fx:factory="observableArrayList">
+                                                           <String fx:value="" />
+                                                           <String fx:value="" />
+                                                           <String fx:value="" />
+                                                           <String fx:value="" />
+                                                           <String fx:value="" />
+                                                           <String fx:value="" />
+                                                           <String fx:value="" />
+                                                           <String fx:value="" />
+                                                       </FXCollections>
+                                                   </items>
+                                               </ComboBox>
+                                 </children>
+                              </AnchorPane>
+                                    </content>
+                                </TitledPane>
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </Tab>
+                <Tab text="Packing List">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="397.0" prefWidth="783.0">
+                            <children>
+                                <TableView fx:id="packingListTable" layoutX="14.0" layoutY="41.0" prefHeight="340.0" prefWidth="752.0" />
+                                <Button layoutX="14.0" layoutY="14.0" onAction="#addRow" text="Add New Row" />
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </Tab>
+            <Tab text="Comments">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="397.0" prefWidth="821.0">
+                     <children>
+                        <TitledPane animated="false" layoutX="14.0" layoutY="14.0" prefHeight="179.0" prefWidth="742.0" text="External Comments">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="151.0" prefWidth="563.0">
+                                 <children>
+                                    <TextArea fx:id="externalCommentsTextArea" layoutY="1.0" prefHeight="150.0" prefWidth="742.0" />
+                                 </children>
+                              </AnchorPane>
+                          </content>
+                        </TitledPane>
+                        <TitledPane animated="false" layoutX="14.0" layoutY="204.0" prefHeight="179.0" prefWidth="742.0" text="Internal Comments">
+                           <content>
+                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="151.0" prefWidth="635.0">
+                                 <children>
+                                    <TextArea fx:id="internalCommentsTextArea" layoutY="-1.0" prefHeight="152.0" prefWidth="742.0" />
+                                 </children>
+                              </AnchorPane>
+                           </content>
+                        </TitledPane>
+                     </children>
+                  </AnchorPane>
+              </content>
+            </Tab>
+            </tabs>
+        </TabPane>
+      <ButtonBar layoutX="668.0" layoutY="29.0" prefHeight="40.0" prefWidth="200.0">
+         <buttons>
+                  <Button onAction="#saveQuote" text="Save" />
+                  <Button onAction="#submitQuote" text="Submit" />
+                  <Button text="Cancel" />
+         </buttons>
+      </ButtonBar>
+    </children>
+</AnchorPane>

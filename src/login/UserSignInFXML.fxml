@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.net.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.*?>
+
+<GridPane id="AnchorPane"  hgap="5" vgap="5" styleClass="mainFxmlClass" xmlns:fx="http://javafx.com/fxml/1" fx:controller="login.UserSignInFXMLController" alignment="center">
+    <padding>
+        <Insets top="10" bottom="10" left="10" right="10" />
+    </padding>
+    <Label
+        GridPane.columnIndex="1"
+        GridPane.rowIndex="0"
+        GridPane.columnSpan="2"
+        textAlignment="CENTER"
+        fx:id="title"
+        text="RQS Log In"/>
+    <Label 
+        GridPane.columnIndex="0" 
+        GridPane.rowIndex="1"
+        text="Username"/>
+    <TextField
+        GridPane.columnIndex="1" 
+        GridPane.rowIndex="1"
+        id="usernameTextField"
+        fx:id="usernameTextField"
+        onAction="#signIn"/>
+    <Label 
+        GridPane.columnIndex="0" 
+        GridPane.rowIndex="2"
+        text="Password:"/>
+    <PasswordField
+        GridPane.columnIndex="1" 
+        GridPane.rowIndex="2"
+        id="passwordField"
+        fx:id="passwordField" 
+        onAction="#signIn"/>
+    <Button
+        GridPane.hgrow="always"
+        GridPane.columnIndex="1"
+        GridPane.rowIndex="3"
+        GridPane.columnSpan="2"
+        text="Sign In"
+        onAction="#signIn"/>
+</GridPane>
