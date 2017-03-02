@@ -7,6 +7,7 @@ package user.navigation;
 
 import java.io.IOException;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -42,6 +43,10 @@ public class NavigationMain extends Application {
         stage.setTitle("RQS");
         stage.setScene(scene);
         stage.show();
+        
+        stage.setOnCloseRequest(event->{
+            Platform.exit();
+        });
         
     }
     

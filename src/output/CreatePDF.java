@@ -13,9 +13,12 @@ import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import connections.DbConnection;
-import java.awt.Color;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,6 +26,8 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import javafx.scene.control.TableView;
+import org.apache.commons.net.ftp.FTP;
+import org.apache.commons.net.ftp.FTPClient;
 
 /**
  *
@@ -36,6 +41,9 @@ public class CreatePDF {
     private final Font SECTION_SUBHEADING = new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.ITALIC);
     private final Font NOTIFICATION_FONT = new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.BOLDITALIC);
     private final int NO_BORDER = PdfPCell.NO_BORDER;
+    
+    
+    private final String USER_HOME = System.getProperty("user.home");
 
     private final String quoteID, userID, companyName, contactName, contactEmail, contactPhone, contactExtension, contactPhoneType, tradeLane, pol, pod, tshp, commodityClass, handlingInstructions, commodityDescription, operationalApproval, overseasApproval, vesselScheduleApproval, oftCurrency, oft, oftUnit, mafiMinimumCurrency, mafiMinimumAmount, bafCurrency, baf, bafUnit, ecaCurrency, eca, ecaUnit, thcCurrency, thc, thcUnit, wfgCurrency, wfg, wfgUnit, docFee, warRisk, bookingNumber, reasonForDecline, internalComments, externalComments;
     private final boolean mafiMinimum, bafIncluded, ecaIncluded, thcIncluded, thcAttached, wfgIncluded, wfgAttached, docFeeIncluded, tariffRate, spotRate, contractRate, booking, ftfRate, declineRate;
@@ -155,12 +163,8 @@ public class CreatePDF {
     * The other directory is for the individual user - userID_quotes/
      */
     public void rateQuote() throws FileNotFoundException, DocumentException {
-
-        String userHome = System.getProperty("user.home");
-        FileOutputStream localFile = new FileOutputStream(userHome + "/Desktop/test.pdf");
-
-        Document document = new Document();
-        PdfWriter.getInstance(document, localFile);
+     Document document = new Document();
+        PdfWriter.getInstance(document, localFile());
         document.open();
         PdfPTable table = new PdfPTable(1);
         PdfPCell cell;
@@ -189,7 +193,57 @@ public class CreatePDF {
         document.addHeader("Header", "This is the header");
         document.add(table);
         document.close();
+        
+        // Upload the file to the server
+        remoteFileUpload(quoteID);
     }
+    
+    private void remoteFileUpload(String quoteID){
+        String server = "ns8139.hostgator.com";
+        int port = 21;
+        String user = "rqs@cbmwebdevelopment.com";
+        String pass = "Wadiver15!";
+        
+        FTPClient ftpClient = new FTPClient();
+        try{
+            ftpClient.connect(server, port);
+            ftpClient.login(user, pass);
+            ftpClient.enterLocalPassiveMode();
+            
+            ftpClient.setFileType(FTP.LOCAL_FILE_TYPE);
+            
+            File localFile = new File(USER_HOME + "/Desktop/Quotes/RQS" + quoteID + ".pdf");
+            
+            String remoteFile = quoteID + ".pdf";
+            InputStream inputStream = new FileInputStream(localFile);
+            boolean done = ftpClient.storeFile(remoteFile, inputStream);
+            inputStream.close();
+            
+            if(done){
+                System.out.println("File uploaded successfully");
+            }
+            
+        }catch(IOException ex){
+            System.out.println("Error uploading file" + ex.getMessage());
+        }
+    }
+    
+    private FileOutputStream localFile() throws FileNotFoundException{   
+        
+        // Check for quotes directory. 
+        // If it doesn't exist create it. 
+        File quotesDir = new File(USER_HOME + "/Desktop/Quotes");
+        
+        if(!quotesDir.exists()){
+            System.out.println("Does not exist");
+            quotesDir.mkdirs();
+        }else{
+            System.out.println("Directory Exists");
+        }
+        FileOutputStream localFile = new FileOutputStream(USER_HOME + "/Desktop/Quotes/RQS" + quoteID + ".pdf"); 
+        return localFile;
+    }
+
 
     private PdfPTable userInformationSection() {
         PdfPTable table = new PdfPTable(new float[]{1, 5});
@@ -323,7 +377,6 @@ public class CreatePDF {
         cell.setBorder(NO_BORDER);
         cell.setColspan(2);
         table.addCell(cell);
-        
         
         return table;
     }
