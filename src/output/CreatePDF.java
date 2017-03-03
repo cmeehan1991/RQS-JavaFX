@@ -30,10 +30,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import javafx.collections.ObservableList;
 import javafx.scene.control.TableView;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.dom4j.DocumentException;
+import tables.PackingListTable.Cargo;
 
 /**
  *
@@ -52,6 +54,7 @@ public class CreatePDF {
 
     private final float[] TWO_COLUMN_TABLE = new float[]{2f, 5f};
     private final float[] FOUR_COLUMN_TABLE = new float[]{2, 5, 2, 5};
+    private final float[] SEVEN_COLUMN_TABLE = new float[]{3, 1, 2, 1, 1, 1, 1};
 
     private final String USER_HOME = System.getProperty("user.home");
 
@@ -178,6 +181,8 @@ public class CreatePDF {
         document.add(customerInformationSection());
         document.add(transitInformationSection());
         document.add(rateInformationSection());
+        document.add(commentsSection());
+        document.add(packingListSection());
 
         document.close();
 
@@ -408,6 +413,24 @@ public class CreatePDF {
         return currency;
     }
 
+    private String getWarRiskValue(String option) {
+        String warRiskValue = null;
+        if (!option.equals("N/A")) {
+            // Will eventually make this so it connects to the database for surcharges and looks for the relevant war risk.
+            switch (option) {
+                case "Israel":
+                    warRiskValue = "3%";
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            warRiskValue = option;
+        }
+
+        return warRiskValue;
+    }
+
     private Table rateInformationSection() {
         Table table = new Table(TWO_COLUMN_TABLE);
         Cell cell;
@@ -418,67 +441,111 @@ public class CreatePDF {
                 .setBorder(NO_BORDER));
 
         table.addCell(new Cell()
-                .add(new Paragraph(currency(oftCurrency) + oft + " per " +oftUnit)
+                .add(new Paragraph(currency(oftCurrency) + oft + " per " + oftUnit)
                         .addStyle(NORMAL_FONT))
                 .setBorder(NO_BORDER));
 
-        if(mafiMinimum){
+        if (mafiMinimum) {
             table.addCell(new Cell()
-            .add(new Paragraph("MAFI minimum:*")
-            .addStyle(BOLD_FONT))
-            .setBorder(NO_BORDER));
-            
+                    .add(new Paragraph("MAFI minimum:*")
+                            .addStyle(BOLD_FONT))
+                    .setBorder(NO_BORDER));
+
             table.addCell(new Cell()
-                .add(new Paragraph(currency(mafiMinimumCurrency) + mafiMinimumAmount + " per MAFI")
-                        .addStyle(NORMAL_FONT))
-                .setBorder(NO_BORDER));
+                    .add(new Paragraph(currency(mafiMinimumCurrency) + mafiMinimumAmount + " per MAFI")
+                            .addStyle(NORMAL_FONT))
+                    .setBorder(NO_BORDER));
         }
-        
+
         table.addCell(new Cell(1, 2)
-        .add(new Paragraph("Subject to")
-        .addStyle(SECTION_SUBHEADING))
-        .setBorder(NO_BORDER)
-        .setHorizontalAlignment(HorizontalAlignment.CENTER));
-        
+                .add(new Paragraph("Subject to")
+                        .addStyle(SECTION_SUBHEADING))
+                .setBorder(NO_BORDER)
+                .setHorizontalAlignment(HorizontalAlignment.CENTER));
+
         table.addCell(new Cell()
                 .add(new Paragraph("Bunker Surcharge:")
                         .addStyle(BOLD_FONT))
                 .setBorder(NO_BORDER));
 
-        table.addCell(new Cell()
-                .add(new Paragraph()
-                        .addStyle(NORMAL_FONT))
-                .setBorder(NO_BORDER));
+        // Determine if the BAF is a percentage or a dollar value
+        if (bafUnit.equals("&")) {
+            table.addCell(new Cell()
+                    .add(new Paragraph(baf + bafUnit)
+                            .addStyle(NORMAL_FONT))
+                    .setBorder(NO_BORDER));
+        } else if (bafIncluded) {
+
+            table.addCell(new Cell()
+                    .add(new Paragraph("Included")
+                            .addStyle(NORMAL_FONT))
+                    .setBorder(NO_BORDER));
+        } else {
+            table.addCell(new Cell()
+                    .add(new Paragraph(currency(bafCurrency) + baf + " per " + bafUnit)
+                            .addStyle(NORMAL_FONT))
+                    .setBorder(NO_BORDER));
+        }
 
         table.addCell(new Cell()
                 .add(new Paragraph("ECA Surcharge:")
                         .addStyle(BOLD_FONT))
                 .setBorder(NO_BORDER));
 
-        table.addCell(new Cell()
-                .add(new Paragraph()
-                        .addStyle(NORMAL_FONT))
-                .setBorder(NO_BORDER));
-
+        if (ecaIncluded) {
+            table.addCell(new Cell()
+                    .add(new Paragraph("Included")
+                            .addStyle(NORMAL_FONT))
+                    .setBorder(NO_BORDER));
+        } else {
+            table.addCell(new Cell()
+                    .add(new Paragraph(currency(ecaCurrency) + eca + " per " + ecaUnit)
+                            .addStyle(NORMAL_FONT))
+                    .setBorder(NO_BORDER));
+        }
         table.addCell(new Cell()
                 .add(new Paragraph("Terminal Handling (Origin")
                         .addStyle(BOLD_FONT))
                 .setBorder(NO_BORDER));
 
-        table.addCell(new Cell()
-                .add(new Paragraph()
-                        .addStyle(NORMAL_FONT))
-                .setBorder(NO_BORDER));
+        if (thcIncluded) {
+            table.addCell(new Cell()
+                    .add(new Paragraph("Included")
+                            .addStyle(NORMAL_FONT))
+                    .setBorder(NO_BORDER));
+        } else if (thcAttached) {
+            table.addCell(new Cell()
+                    .add(new Paragraph("See Email Attachment")
+                            .addStyle(NORMAL_FONT))
+                    .setBorder(NO_BORDER));
+        } else {
+            table.addCell(new Cell()
+                    .add(new Paragraph(currency(thcCurrency) + thc + thcUnit)
+                            .addStyle(NORMAL_FONT))
+                    .setBorder(NO_BORDER));
+        }
 
         table.addCell(new Cell()
                 .add(new Paragraph("Wharfage (Origin):")
                         .addStyle(BOLD_FONT))
                 .setBorder(NO_BORDER));
 
-        table.addCell(new Cell()
-                .add(new Paragraph()
-                        .addStyle(NORMAL_FONT))
-                .setBorder(NO_BORDER));
+        if (wfgIncluded) {
+            table.addCell(new Cell()
+                    .add(new Paragraph("Included")
+                            .addStyle(NORMAL_FONT))
+                    .setBorder(NO_BORDER));
+        } else if (wfgAttached) {
+            table.addCell(new Cell()
+                    .add(new Paragraph("See Email Attachment")
+                            .addStyle(NORMAL_FONT))
+                    .setBorder(NO_BORDER));
+        } else {
+            table.addCell(new Cell()
+                    .add(new Paragraph(currency(wfgCurrency) + wfg + wfgUnit)
+                            .addStyle(NORMAL_FONT))
+                    .setBorder(NO_BORDER));
+        }
 
         table.addCell(new Cell()
                 .add(new Paragraph("Documentation Fee:")
@@ -486,10 +553,107 @@ public class CreatePDF {
                 .setBorder(NO_BORDER));
 
         table.addCell(new Cell()
-                .add(new Paragraph()
+                .add(new Paragraph(docFee)
                         .addStyle(NORMAL_FONT))
                 .setBorder(NO_BORDER));
-        
+
+        table.addCell(new Cell()
+                .add(new Paragraph("War Risk:")
+                        .addStyle(BOLD_FONT))
+                .setBorder(NO_BORDER));
+
+        table.addCell(new Cell()
+                .add(new Paragraph(getWarRiskValue(warRisk))
+                        .addStyle(NORMAL_FONT))
+                .setBorder(NO_BORDER));
+
+        if (spotRate) {
+            table.addCell(new Cell()
+                    .add(new Paragraph("This rate is subject to FMC filing. You must notify sales in writing prior to booking this cargo in order to receive this rate. If sales is not notified prior to booking this cargo then the tariff rate will apply.")
+                            .addStyle(WARNING_FONT))
+                    .setBorder(NO_BORDER));
+        }
+
+        return table;
+    }
+
+    private Table commentsSection() {
+        Table table = new Table(TWO_COLUMN_TABLE);
+        table.addCell(new Cell().add(new Paragraph("Comments:").addStyle(BOLD_FONT)));
+        table.addCell(new Cell().add(new Paragraph(externalComments).addStyle(NORMAL_FONT)));
+        return table;
+    }
+
+    private Table packingListSection() {
+        Table table = new Table(SEVEN_COLUMN_TABLE);
+
+        table.addCell(new Cell(1, 7)
+                .add(new Paragraph("Packing List")
+                        .addStyle(SECTION_HEADING))
+                .setHorizontalAlignment(HorizontalAlignment.CENTER)
+                .setBorder(NO_BORDER)
+                .setPaddingBottom(10f));
+
+        // Headings for the packing list
+        table.addCell(new Cell()
+                .add(new Paragraph("Commodity")
+                        .addStyle(BOLD_FONT)));
+
+        table.addCell(new Cell()
+                .add(new Paragraph("Quantity")
+                        .addStyle(BOLD_FONT)));
+
+        table.addCell(new Cell()
+                .add(new Paragraph("Kgs")
+                        .addStyle(BOLD_FONT)));
+
+        table.addCell(new Cell()
+                .add(new Paragraph("L (cm)")
+                        .addStyle(BOLD_FONT)));
+
+        table.addCell(new Cell()
+                .add(new Paragraph("W (cm)")
+                        .addStyle(BOLD_FONT)));
+
+        table.addCell(new Cell()
+                .add(new Paragraph("H (cm)")
+                        .addStyle(BOLD_FONT)));
+
+        table.addCell(new Cell()
+                .add(new Paragraph("Cubic Meters")
+                        .addStyle(BOLD_FONT)));
+
+        // Here comes the fun part. We now have to loop through the packing list table and add an item for each cell. 
+        // This is going to be very similar to the insertPackingList() method.
+        ObservableList<Cargo> cargo = packingListTable.getItems();
+        cargo.forEach((item) -> {
+            table.addCell(new Cell()
+                    .add(new Paragraph(item.getCommodity())
+                            .addStyle(NORMAL_FONT)));
+
+            table.addCell(new Cell()
+                    .add(new Paragraph(item.getQuantity())
+                            .addStyle(NORMAL_FONT)
+                    ));
+            table.addCell(new Cell()
+                    .add(new Paragraph(item.getLength())
+                            .addStyle(NORMAL_FONT)));
+            table.addCell(new Cell()
+                    .add(new Paragraph(item.getWidth())
+                            .addStyle(NORMAL_FONT)));
+            table.addCell(new Cell()
+                    .add(new Paragraph()
+                            .addStyle(NORMAL_FONT)));
+            table.addCell(new Cell()
+                    .add(new Paragraph(item.getHeight())
+                            .addStyle(NORMAL_FONT)));
+            Double quantity = Double.parseDouble(item.getQuantity());
+            table.addCell(new Cell()
+                    .add(new Paragraph(item.getCubicMeters())
+                            .addStyle(NORMAL_FONT)));
+
+        });
+
         return table;
     }
 }

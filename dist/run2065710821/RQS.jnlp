@@ -9,25 +9,25 @@
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="RQS.jar" size="67347" download="eager" />
-    <jar href="lib/apache-commons-net.jar" size="482515" download="eager" />
-    <jar href="lib/commons-lang3-3.5.jar" size="505093" download="eager" />
-    <jar href="lib/dom4j.jar" size="541397" download="eager" />
-    <jar href="lib/itext7-io-7.0.2-javadoc.jar" size="1567" download="eager" />
+    <jar href="RQS.jar" size="67355" download="eager" />
+    <jar href="lib/apache-commons-net.jar" size="482513" download="eager" />
+    <jar href="lib/commons-lang3-3.5.jar" size="505094" download="eager" />
+    <jar href="lib/dom4j.jar" size="541399" download="eager" />
+    <jar href="lib/itext7-io-7.0.2-javadoc.jar" size="1570" download="eager" />
     <jar href="lib/itext7-io-7.0.2-sources.jar" size="485096" download="eager" />
     <jar href="lib/itext7-io-7.0.2.jar" size="684978" download="eager" />
     <jar href="lib/itext7-kernel-7.0.2-javadoc.jar" size="1567" download="eager" />
-    <jar href="lib/itext7-kernel-7.0.2-sources.jar" size="1055597" download="eager" />
-    <jar href="lib/itext7-kernel-7.0.2.jar" size="1067362" download="eager" />
+    <jar href="lib/itext7-kernel-7.0.2-sources.jar" size="1055599" download="eager" />
+    <jar href="lib/itext7-kernel-7.0.2.jar" size="1067364" download="eager" />
     <jar href="lib/itext7-layout-7.0.2-javadoc.jar" size="1567" download="eager" />
-    <jar href="lib/itext7-layout-7.0.2-sources.jar" size="346512" download="eager" />
-    <jar href="lib/itext7-layout-7.0.2.jar" size="332970" download="eager" />
+    <jar href="lib/itext7-layout-7.0.2-sources.jar" size="346514" download="eager" />
+    <jar href="lib/itext7-layout-7.0.2.jar" size="332968" download="eager" />
     <jar href="lib/itext7-pdfa-7.0.2-javadoc.jar" size="1567" download="eager" />
-    <jar href="lib/itext7-pdfa-7.0.2-sources.jar" size="38792" download="eager" />
-    <jar href="lib/itext7-pdfa-7.0.2.jar" size="48114" download="eager" />
+    <jar href="lib/itext7-pdfa-7.0.2-sources.jar" size="38791" download="eager" />
+    <jar href="lib/itext7-pdfa-7.0.2.jar" size="48113" download="eager" />
     <jar href="lib/mysql-connector-java-5.1.23-bin.jar" size="860506" download="eager" />
-    <jar href="lib/slf4j-api-2.0.99.jar" size="27516" download="eager" />
-    <jar href="lib/slf4j-simple-1.6.99.jar" size="9734" download="eager" />
+    <jar href="lib/slf4j-api-2.0.99.jar" size="27513" download="eager" />
+    <jar href="lib/slf4j-simple-1.6.99.jar" size="9735" download="eager" />
   </resources>
 <security>
   <all-permissions/>
