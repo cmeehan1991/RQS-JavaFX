@@ -5,13 +5,18 @@
  */
 package output;
 
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.io.font.FontConstants;
+import com.itextpdf.kernel.font.PdfFontFactory;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.color.Color;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.Style;
+import com.itextpdf.layout.border.Border;
+import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.property.HorizontalAlignment;
 import connections.DbConnection;
 import java.io.File;
 import java.io.FileInputStream;
@@ -28,6 +33,7 @@ import java.util.Map;
 import javafx.scene.control.TableView;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
+import org.dom4j.DocumentException;
 
 /**
  *
@@ -35,21 +41,25 @@ import org.apache.commons.net.ftp.FTPClient;
  */
 public class CreatePDF {
 
-    private final Font BOLD_FONT = new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.BOLD);
-    private final Font NORMAL_FONT = new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.NORMAL);
-    private final Font SECTION_HEADING = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD);
-    private final Font SECTION_SUBHEADING = new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.ITALIC);
-    private final Font NOTIFICATION_FONT = new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.BOLDITALIC);
-    private final int NO_BORDER = PdfPCell.NO_BORDER;
-    
-    
+    private final Style BOLD_FONT = new Style().setFont(PdfFontFactory.createFont(FontConstants.TIMES_BOLD)).setFontSize(14);
+    private final Style NORMAL_FONT = new Style().setFont(PdfFontFactory.createFont(FontConstants.TIMES_ROMAN)).setFontSize(14);
+    private final Style SECTION_HEADING = new Style().setFont(PdfFontFactory.createFont(FontConstants.TIMES_BOLD)).setFontSize(18);
+    private final Style SECTION_SUBHEADING = new Style().setFont(PdfFontFactory.createFont(FontConstants.TIMES_ITALIC)).setFontSize(14);
+    private final Style NOTIFICATION_FONT = new Style().setFont(PdfFontFactory.createFont(FontConstants.TIMES_ITALIC)).setFontSize(14).setFontColor(Color.ORANGE).setUnderline();
+    private final Style WARNING_FONT = new Style().setFont(PdfFontFactory.createFont(FontConstants.TIMES_ITALIC)).setFontSize(14).setFontColor(Color.RED).setBackgroundColor(Color.YELLOW).setUnderline();
+    private final Style TERMS_FONT = new Style().setFont(PdfFontFactory.createFont(FontConstants.TIMES_ROMAN)).setFontSize(10);
+    private final Border NO_BORDER = Border.NO_BORDER;
+
+    private final float[] TWO_COLUMN_TABLE = new float[]{2f, 5f};
+    private final float[] FOUR_COLUMN_TABLE = new float[]{2, 5, 2, 5};
+
     private final String USER_HOME = System.getProperty("user.home");
 
     private final String quoteID, userID, companyName, contactName, contactEmail, contactPhone, contactExtension, contactPhoneType, tradeLane, pol, pod, tshp, commodityClass, handlingInstructions, commodityDescription, operationalApproval, overseasApproval, vesselScheduleApproval, oftCurrency, oft, oftUnit, mafiMinimumCurrency, mafiMinimumAmount, bafCurrency, baf, bafUnit, ecaCurrency, eca, ecaUnit, thcCurrency, thc, thcUnit, wfgCurrency, wfg, wfgUnit, docFee, warRisk, bookingNumber, reasonForDecline, internalComments, externalComments;
     private final boolean mafiMinimum, bafIncluded, ecaIncluded, thcIncluded, thcAttached, wfgIncluded, wfgAttached, docFeeIncluded, tariffRate, spotRate, contractRate, booking, ftfRate, declineRate;
     private final TableView packingListTable;
 
-    public CreatePDF(String quoteID, String userID, String companyName, String contactName, String contactEmail, String contactPhone, String phoneExtension, String phoneType, String tradeLane, String pol, String pod, String tshp, String commodityClass, String handlingInstructions, String commodityDescription, String operationalApproval, String overseasApproval, String vesselScheduleApproval, String oftCurrency, String oft, String oftUnit, Boolean mafiMinimum, String mafiMinimumCurrency, String mafiMinimumAmount, String bafCurrency, String baf, String bafUnit, Boolean bafIncluded, String ecaCurrency, String eca, String ecaUnit, Boolean ecaIncluded, String thcCurrency, String thc, String thcUnit, Boolean thcIncluded, Boolean thcAttached, String wfgCurrency, String wfg, String wfgUnit, Boolean wfgIncluded, Boolean wfgAttached, String docFee, Boolean docFeeIncluded, String warRisk, Boolean tariff, Boolean spot, Boolean contract, Boolean booking, String bookingNumber, Boolean ftf, Boolean decline, String reasonForDecline, String internalComments, String externalComments, TableView packingListTable) {
+    public CreatePDF(String quoteID, String userID, String companyName, String contactName, String contactEmail, String contactPhone, String phoneExtension, String phoneType, String tradeLane, String pol, String pod, String tshp, String commodityClass, String handlingInstructions, String commodityDescription, String operationalApproval, String overseasApproval, String vesselScheduleApproval, String oftCurrency, String oft, String oftUnit, Boolean mafiMinimum, String mafiMinimumCurrency, String mafiMinimumAmount, String bafCurrency, String baf, String bafUnit, Boolean bafIncluded, String ecaCurrency, String eca, String ecaUnit, Boolean ecaIncluded, String thcCurrency, String thc, String thcUnit, Boolean thcIncluded, Boolean thcAttached, String wfgCurrency, String wfg, String wfgUnit, Boolean wfgIncluded, Boolean wfgAttached, String docFee, Boolean docFeeIncluded, String warRisk, Boolean tariff, Boolean spot, Boolean contract, Boolean booking, String bookingNumber, Boolean ftf, Boolean decline, String reasonForDecline, String internalComments, String externalComments, TableView packingListTable) throws IOException {
 
         this.quoteID = quoteID;
         this.userID = userID;
@@ -115,10 +125,8 @@ public class CreatePDF {
         this.externalComments = externalComments;
 
         this.packingListTable = packingListTable;
-        
-        // Set font properties
-        NOTIFICATION_FONT.setColor(255,0,0);
     }
+
 
     /*
     * Get the user's information based on the user ID passed from the quote form.
@@ -163,220 +171,324 @@ public class CreatePDF {
     * The other directory is for the individual user - userID_quotes/
      */
     public void rateQuote() throws FileNotFoundException, DocumentException {
-     Document document = new Document();
-        PdfWriter.getInstance(document, localFile());
-        document.open();
-        PdfPTable table = new PdfPTable(1);
-        PdfPCell cell;
+        PdfDocument pdf = new PdfDocument(new PdfWriter(localFile()));
+        Document document = new Document(pdf);
 
-        cell = new PdfPCell(userInformationSection());
-        cell.setPaddingTop(10f);
-        cell.setPaddingBottom(10f);
-        cell.setBorder(NO_BORDER);
-        table.addCell(cell);
+        document.add(userInformationSection());
+        document.add(customerInformationSection());
+        document.add(transitInformationSection());
+        document.add(rateInformationSection());
 
-        cell = new PdfPCell(customerInformationSection());
-        cell.setPaddingTop(10f);
-        cell.setPaddingBottom(10f);
-        table.addCell(cell);
-
-        cell = new PdfPCell(transitInformationSection());
-        cell.setPaddingTop(10f);
-        cell.setPaddingBottom(10f);
-        table.addCell(cell);
-        
-        cell = new PdfPCell(rateInformationSection());
-        cell.setPaddingTop(10f);
-        cell.setPaddingBottom(10f);
-        table.addCell(cell);
-
-        document.addHeader("Header", "This is the header");
-        document.add(table);
         document.close();
-        
+
         // Upload the file to the server
         remoteFileUpload(quoteID);
     }
-    
-    private void remoteFileUpload(String quoteID){
+
+    private void remoteFileUpload(String quoteID) {
         String server = "ns8139.hostgator.com";
         int port = 21;
         String user = "rqs@cbmwebdevelopment.com";
         String pass = "Wadiver15!";
-        
+
         FTPClient ftpClient = new FTPClient();
-        try{
+        try {
             ftpClient.connect(server, port);
             ftpClient.login(user, pass);
             ftpClient.enterLocalPassiveMode();
-            
+
             ftpClient.setFileType(FTP.LOCAL_FILE_TYPE);
-            
+
             File localFile = new File(USER_HOME + "/Desktop/Quotes/RQS" + quoteID + ".pdf");
-            
+
             String remoteFile = quoteID + ".pdf";
             InputStream inputStream = new FileInputStream(localFile);
             boolean done = ftpClient.storeFile(remoteFile, inputStream);
             inputStream.close();
-            
-            if(done){
+
+            if (done) {
                 System.out.println("File uploaded successfully");
             }
-            
-        }catch(IOException ex){
+
+        } catch (IOException ex) {
             System.out.println("Error uploading file" + ex.getMessage());
         }
     }
-    
-    private FileOutputStream localFile() throws FileNotFoundException{   
-        
+
+    private FileOutputStream localFile() throws FileNotFoundException {
+
         // Check for quotes directory. 
         // If it doesn't exist create it. 
         File quotesDir = new File(USER_HOME + "/Desktop/Quotes");
-        
-        if(!quotesDir.exists()){
+
+        if (!quotesDir.exists()) {
             System.out.println("Does not exist");
             quotesDir.mkdirs();
-        }else{
+        } else {
             System.out.println("Directory Exists");
         }
-        FileOutputStream localFile = new FileOutputStream(USER_HOME + "/Desktop/Quotes/RQS" + quoteID + ".pdf"); 
+        FileOutputStream localFile = new FileOutputStream(USER_HOME + "/Desktop/Quotes/RQS" + quoteID + ".pdf");
         return localFile;
     }
 
-
-    private PdfPTable userInformationSection() {
-        PdfPTable table = new PdfPTable(new float[]{1, 5});
-        PdfPCell cell;
+    private Table userInformationSection() {
+        Table table = new Table(TWO_COLUMN_TABLE);
         Map userInformation = userInformation(userID);
 
-        cell = new PdfPCell(new Paragraph("\"K\" Line Rep:", BOLD_FONT));
-        cell.setBorder(NO_BORDER);
-        table.addCell(cell);
+        table.addCell(new Cell()
+                .add(new Paragraph("\"K\" Line Rep:")
+                        .addStyle(BOLD_FONT))
+                .setBorder(NO_BORDER));
 
-        cell = new PdfPCell(new Paragraph(userInformation.get("LAST NAME") + ", " + userInformation.get("FIRST NAME") + " - " + userInformation.get("ROLE"), NORMAL_FONT));
-        cell.setBorder(NO_BORDER);
-        table.addCell(cell);
+        table.addCell(new Cell()
+                .add(new Paragraph(userInformation.get("LAST NAME") + ", " + userInformation.get("FIRST NAME") + " - " + userInformation.get("ROLE"))
+                        .addStyle(NORMAL_FONT))
+                .setBorder(NO_BORDER));
 
-        cell = new PdfPCell(new Paragraph("Email:", BOLD_FONT));
-        cell.setBorder(NO_BORDER);
-        table.addCell(cell);
+        table.addCell(new Cell()
+                .add(new Paragraph("Email:")
+                        .addStyle(BOLD_FONT))
+                .setBorder(NO_BORDER));
 
-        cell = new PdfPCell(new Paragraph(userInformation.get("PRIMARY_EMAIL").toString(), NORMAL_FONT));
-        cell.setBorder(NO_BORDER);
-        table.addCell(cell);
+        table.addCell(new Cell()
+                .add(new Paragraph(userInformation.get("PRIMARY_EMAIL").toString())
+                        .addStyle(NORMAL_FONT))
+                .setBorder(NO_BORDER));
 
-        cell = new PdfPCell(new Paragraph("Tel:", BOLD_FONT));
-        cell.setBorder(NO_BORDER);
-        table.addCell(cell);
+        table.addCell(new Cell()
+                .add(new Paragraph("Tel:")
+                        .addStyle(BOLD_FONT))
+                .setBorder(NO_BORDER));
 
-        cell = new PdfPCell(new Paragraph(userInformation.get("PRIMARY_PHONE").toString(), NORMAL_FONT));
-        cell.setBorder(NO_BORDER);
-        table.addCell(cell);
+        table.addCell(new Cell()
+                .add(new Paragraph(userInformation.get("PRIMARY_PHONE").toString())
+                        .addStyle(NORMAL_FONT))
+                .setBorder(NO_BORDER));
 
-        cell = new PdfPCell(new Paragraph("Office:", BOLD_FONT));
-        cell.setBorder(NO_BORDER);
-        table.addCell(cell);
+        table.addCell(new Cell()
+                .add(new Paragraph("Office:")
+                        .addStyle(BOLD_FONT))
+                .setBorder(NO_BORDER));
 
-        cell = new PdfPCell(new Paragraph(userInformation.get("OFFICE_LOCATION").toString(), NORMAL_FONT));
-        cell.setBorder(NO_BORDER);
-        table.addCell(cell);
+        table.addCell(new Cell()
+                .add(new Paragraph(userInformation.get("OFFICE_LOCATION").toString())
+                        .addStyle(NORMAL_FONT))
+                .setBorder(NO_BORDER));
 
         return table;
     }
 
-    private PdfPTable customerInformationSection() {
-        PdfPTable table = new PdfPTable(new float[]{1, 5});
-        PdfPCell cell;
+    private Table customerInformationSection() {
+        Table table = new Table(FOUR_COLUMN_TABLE);
 
-        cell = new PdfPCell(new Paragraph("Company", BOLD_FONT));
-        cell.setBorder(NO_BORDER);
+        table.addCell(new Cell()
+                .add(new Paragraph("Company:")
+                        .addStyle(BOLD_FONT))
+                .setBorder(NO_BORDER));
 
-        table.addCell(cell);
+        table.addCell(new Cell(2, 3)
+                .add(new Paragraph(companyName)
+                        .addStyle(NORMAL_FONT))
+                .setBorder(NO_BORDER));
 
-        cell = new PdfPCell(new Paragraph(companyName, NORMAL_FONT));
-        cell.setBorder(NO_BORDER);
-        table.addCell(cell);
+        table.addCell(new Cell()
+                .add(new Paragraph("Contact:")
+                        .addStyle(BOLD_FONT))
+                .setBorder(NO_BORDER));
 
-        cell = new PdfPCell(new Paragraph("Contact:", BOLD_FONT));
-        cell.setBorder(NO_BORDER);
-        table.addCell(cell);
+        table.addCell(new Cell()
+                .add(new Paragraph(contactName)
+                        .addStyle(NORMAL_FONT))
+                .setBorder(NO_BORDER));
 
-        cell = new PdfPCell(new Paragraph(contactName, NORMAL_FONT));
-        cell.setBorder(NO_BORDER);
-        table.addCell(cell);
+        table.addCell(new Cell()
+                .add(new Paragraph("Email:")
+                        .addStyle(BOLD_FONT))
+                .setBorder(NO_BORDER));
 
-        table.addCell("Email:");
-        table.addCell(contactEmail);
+        table.addCell(new Cell()
+                .add(new Paragraph(contactEmail)
+                        .addStyle(NORMAL_FONT))
+                .setBorder(NO_BORDER));
 
-        table.addCell("Phone:");
+        table.addCell(new Cell()
+                .add(new Paragraph("Phone:")
+                        .addStyle(BOLD_FONT))
+                .setBorder(NO_BORDER));
+
+        String phone = null;
         if (contactExtension != null) {
-            table.addCell(contactPhone + " ext. " + contactExtension);
+            phone = contactPhone + " ext. " + contactExtension;
         } else {
-            table.addCell(contactPhone);
+            phone = contactPhone;
         }
 
-        table.addCell("Type:");
-        table.addCell(contactPhoneType);
+        table.addCell(new Cell()
+                .add(new Paragraph(phone)
+                        .addStyle(NORMAL_FONT))
+                .setBorder(NO_BORDER));
 
         return table;
     }
 
-    private PdfPTable transitInformationSection() {
-        PdfPTable table = new PdfPTable(new float[]{1, 5});
-        PdfPCell cell;
+    private Table transitInformationSection() {
+        Table table = new Table(FOUR_COLUMN_TABLE);
+        Cell cell;
 
-        cell = new PdfPCell(new Paragraph("Trade Lane:", BOLD_FONT));
-        cell.setBorder(NO_BORDER);
-        table.addCell(cell);
-        
-        cell = new PdfPCell(new Paragraph(tradeLane, NORMAL_FONT));
-        cell.setBorder(NO_BORDER);
-        table.addCell(cell);
-        
-        cell = new PdfPCell(new Paragraph("Load/Discharge Ports:", BOLD_FONT));
-        cell.setBorder(NO_BORDER);
-        table.addCell(cell);
+        table.addCell(new Cell()
+                .add(new Paragraph("Trade Lane:")
+                        .addStyle(BOLD_FONT))
+                .setBorder(NO_BORDER));
 
-        cell = new PdfPCell(new Paragraph(pol + "/" + pod, NORMAL_FONT));
-        cell.setBorder(NO_BORDER);
-        table.addCell(cell);
+        table.addCell(new Cell()
+                .add(new Paragraph(tradeLane)
+                        .addStyle(NORMAL_FONT))
+                .setBorder(NO_BORDER));
+
+        table.addCell(new Cell()
+                .add(new Paragraph("Load/Discharge Ports:")
+                        .addStyle(BOLD_FONT))
+                .setBorder(NO_BORDER));
+
+        table.addCell(new Cell(1, 3)
+                .add(new Paragraph(pol + "/" + pod)
+                        .addStyle(NORMAL_FONT))
+                .setBorder(NO_BORDER));
 
         if (tshp != null) {
-            cell = new PdfPCell(new Paragraph("via:", BOLD_FONT));
-            cell.setBorder(NO_BORDER);
-            table.addCell(cell);
+            table.addCell(new Cell()
+                    .add(new Paragraph("via:")
+                            .addStyle(BOLD_FONT))
+                    .setBorder(NO_BORDER));
 
-            cell = new PdfPCell(new Paragraph(tshp, NORMAL_FONT));
-            cell.setBorder(NO_BORDER);
-            table.addCell(cell);
+            table.addCell(new Cell()
+                    .add(new Paragraph(tshp)
+                            .addStyle(NORMAL_FONT))
+                    .setBorder(NO_BORDER));
         }
 
+        table.addCell(new Cell()
+                .add(new Paragraph("Terms:*")
+                        .addStyle(BOLD_FONT))
+                .setBorder(NO_BORDER));
+
+        table.addCell(new Cell()
+                .add(new Paragraph("Port - Port")
+                        .addStyle(NORMAL_FONT))
+                .setBorder(NO_BORDER));
+
         if (vesselScheduleApproval.equals("PENDING")) {
-            cell = new PdfPCell(new Paragraph("Subject to vessel scheduling."));
-            cell.setBorder(NO_BORDER);
-            table.addCell(cell);
+            table.addCell(new Cell()
+                    .add(new Paragraph("Subject to vessel scheduling")
+                            .addStyle(NOTIFICATION_FONT))
+                    .setBorder(NO_BORDER));
         }
 
         return table;
     }
-    
-    private PdfPTable rateInformationSection(){
-        PdfPTable table = new PdfPTable(new float[]{1, 5});
-        PdfPCell cell;
+
+    private String currency(String curr) {
+        String currency = curr;
+        switch (curr) {
+            case "USD":
+                currency = "$";
+                break;
+            case "EUR":
+                currency = "€";
+                break;
+            case "JPY":
+                currency = "¥";
+                break;
+            case "GBP":
+                currency = "£";
+                break;
+            default:
+                break;
+        }
+        return currency;
+    }
+
+    private Table rateInformationSection() {
+        Table table = new Table(TWO_COLUMN_TABLE);
+        Cell cell;
+
+        table.addCell(new Cell()
+                .add(new Paragraph("Base Ocean Freight:")
+                        .addStyle(BOLD_FONT))
+                .setBorder(NO_BORDER));
+
+        table.addCell(new Cell()
+                .add(new Paragraph(currency(oftCurrency) + oft + " per " +oftUnit)
+                        .addStyle(NORMAL_FONT))
+                .setBorder(NO_BORDER));
+
+        if(mafiMinimum){
+            table.addCell(new Cell()
+            .add(new Paragraph("MAFI minimum:*")
+            .addStyle(BOLD_FONT))
+            .setBorder(NO_BORDER));
+            
+            table.addCell(new Cell()
+                .add(new Paragraph(currency(mafiMinimumCurrency) + mafiMinimumAmount + " per MAFI")
+                        .addStyle(NORMAL_FONT))
+                .setBorder(NO_BORDER));
+        }
         
-        cell = new PdfPCell(new Paragraph("Base OFT:", BOLD_FONT));
-        cell.setBorder(NO_BORDER);
-        table.addCell(cell);
+        table.addCell(new Cell(1, 2)
+        .add(new Paragraph("Subject to")
+        .addStyle(SECTION_SUBHEADING))
+        .setBorder(NO_BORDER)
+        .setHorizontalAlignment(HorizontalAlignment.CENTER));
         
-        cell = new PdfPCell(new Paragraph(oftCurrency + oft + " per " + oftUnit , NORMAL_FONT));
-        cell.setBorder(NO_BORDER);
-        table.addCell(cell);
-        
-        cell = new PdfPCell(new Paragraph("Subject to", SECTION_SUBHEADING));
-        cell.setBorder(NO_BORDER);
-        cell.setColspan(2);
-        table.addCell(cell);
+        table.addCell(new Cell()
+                .add(new Paragraph("Bunker Surcharge:")
+                        .addStyle(BOLD_FONT))
+                .setBorder(NO_BORDER));
+
+        table.addCell(new Cell()
+                .add(new Paragraph()
+                        .addStyle(NORMAL_FONT))
+                .setBorder(NO_BORDER));
+
+        table.addCell(new Cell()
+                .add(new Paragraph("ECA Surcharge:")
+                        .addStyle(BOLD_FONT))
+                .setBorder(NO_BORDER));
+
+        table.addCell(new Cell()
+                .add(new Paragraph()
+                        .addStyle(NORMAL_FONT))
+                .setBorder(NO_BORDER));
+
+        table.addCell(new Cell()
+                .add(new Paragraph("Terminal Handling (Origin")
+                        .addStyle(BOLD_FONT))
+                .setBorder(NO_BORDER));
+
+        table.addCell(new Cell()
+                .add(new Paragraph()
+                        .addStyle(NORMAL_FONT))
+                .setBorder(NO_BORDER));
+
+        table.addCell(new Cell()
+                .add(new Paragraph("Wharfage (Origin):")
+                        .addStyle(BOLD_FONT))
+                .setBorder(NO_BORDER));
+
+        table.addCell(new Cell()
+                .add(new Paragraph()
+                        .addStyle(NORMAL_FONT))
+                .setBorder(NO_BORDER));
+
+        table.addCell(new Cell()
+                .add(new Paragraph("Documentation Fee:")
+                        .addStyle(BOLD_FONT))
+                .setBorder(NO_BORDER));
+
+        table.addCell(new Cell()
+                .add(new Paragraph()
+                        .addStyle(NORMAL_FONT))
+                .setBorder(NO_BORDER));
         
         return table;
     }

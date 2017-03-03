@@ -5,6 +5,8 @@
  */
 package tables;
 
+import java.util.ArrayList;
+import java.util.List;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -15,6 +17,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.util.Callback;
 
 /**
@@ -27,20 +31,21 @@ public class PackingListTable {
         packingListTable(tableView);
     }
 
-    public PackingListTable(){}
-    
+    public PackingListTable() {
+    }
+
     public ObservableList<Cargo> data = FXCollections.observableArrayList(
             new Cargo(null, null, null, null, null, null, null)
     );
-    
-    public static void addRow(){
+
+    public static void addRow() {
         new Cargo().setCommodity(null);
     }
 
     private void packingListTable(TableView tableView) {
 
         Callback<TableColumn<Cargo, String>, TableCell<Cargo, String>> cellFactory = (TableColumn<Cargo, String> param) -> new EditingCell();
-        
+
         // Setting the column properties for the packing list table view
         TableColumn<Cargo, String> commodityColumn = new TableColumn("Commodity Name");
         TableColumn quantityColumn = new TableColumn("Quantity");
@@ -54,10 +59,10 @@ public class PackingListTable {
         commodityColumn.setCellValueFactory(new PropertyValueFactory<>("commodity"));
         commodityColumn.setPrefWidth(200.0);
         commodityColumn.setCellFactory(cellFactory);
-        commodityColumn.setOnEditCommit((TableColumn.CellEditEvent<Cargo, String> t)->{
+        commodityColumn.setOnEditCommit((TableColumn.CellEditEvent<Cargo, String> t) -> {
             ((Cargo) t.getTableView().getItems().get(t.getTablePosition().getRow())).setCommodity(t.getNewValue());
         });
-        
+
         quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         quantityColumn.setCellFactory(cellFactory);
         quantityColumn.setOnEditCommit(new EventHandler<TableColumn.CellEditEvent<Cargo, String>>() {
@@ -208,6 +213,7 @@ public class PackingListTable {
             }
             setText(null);
             setGraphic(textField);
+            textField.requestFocus();
             textField.selectAll();
         }
 
@@ -245,6 +251,62 @@ public class PackingListTable {
                     commitEdit(textField.getText());
                 }
             });
+            textField.setOnKeyPressed((KeyEvent event) -> {
+                if (event.getCode() == KeyCode.ENTER) {
+                    commitEdit(textField.getText());
+                } else if (event.getCode() == KeyCode.TAB) {
+                    commitEdit(textField.getText());
+                    TableColumn nextColumn = getNextColumn(!event.isShiftDown());
+                    if(nextColumn != null){
+                        getTableView().edit(getTableRow().getIndex(), nextColumn);
+                        
+                    }
+                }
+            });
+        }
+
+        // Thanks to https://gist.github.com/abhinayagarwal/9383881
+        
+        private TableColumn<Cargo, ?> getNextColumn(boolean forward) {
+            List<TableColumn<Cargo, ?>> columns = new ArrayList<>();
+            getTableView().getColumns().forEach((column) -> {
+                columns.addAll(getLeaves(column));
+            });
+            // There is no other column that supports editing.
+            if (columns.size() < 2) {
+                return null;
+            }
+            int currentIndex = columns.indexOf(getTableColumn());
+            int nextIndex = currentIndex;
+            if (forward) {
+                nextIndex++;
+                if (nextIndex > columns.size() - 1) {
+                    nextIndex = 0;
+                }
+            } else {
+                nextIndex--;
+                if (nextIndex < 0) {
+                    nextIndex = columns.size() - 1;
+                }
+            }
+            return columns.get(nextIndex);
+        }
+
+        private List<TableColumn<Cargo, ?>> getLeaves(
+                TableColumn<Cargo, ?> root) {
+            List<TableColumn<Cargo, ?>> columns = new ArrayList<>();
+            if (root.getColumns().isEmpty()) {
+                // We only want the leaves that are editable.
+                if (root.isEditable()) {
+                    columns.add(root);
+                }
+                return columns;
+            } else {
+                root.getColumns().forEach((column) -> {
+                    columns.addAll(getLeaves(column));
+                });
+                return columns;
+            }
         }
 
         private String getString() {

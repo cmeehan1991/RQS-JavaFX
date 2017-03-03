@@ -5,28 +5,24 @@
  */
 package user.newquote;
 
-import com.itextpdf.text.DocumentException;
+
 import connections.DbConnection;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableArray;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.concurrent.WorkerStateEvent;
@@ -43,6 +39,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
+import org.apache.commons.lang3.text.WordUtils;
+import org.dom4j.DocumentException;
 import output.CreatePDF;
 import quote.NewQuote;
 import tables.PackingListTable;
@@ -69,11 +67,11 @@ public class NewQuoteFXMLController implements Initializable {
     TextArea internalCommentsTextArea, externalCommentsTextArea;
 
     @FXML
-    RadioButton operationalApprovalYesRadioButton, operationalApprovalNoRadioButton, operationalApprovalPendingRadioButton,overseasApprovalYesRadioButton, overseasApprovalNoRadioButton, overseasApprovalPendingRadioButton, vesselScheduleYesRadioButton, vesselScheduleNoRadioButton, vesselSchedulePendingRadioButton;
+    RadioButton operationalApprovalYesRadioButton, operationalApprovalNoRadioButton, operationalApprovalPendingRadioButton, overseasApprovalYesRadioButton, overseasApprovalNoRadioButton, overseasApprovalPendingRadioButton, vesselScheduleYesRadioButton, vesselScheduleNoRadioButton, vesselSchedulePendingRadioButton;
 
     private String companyName, contactName, contactEmail, contactPhone, phoneExtension, phoneType, tradeLane, pol, pod, tshp, commodityClass, handlingInstructions, commodityDescription, operationalApproval, overseasApproval, vesselScheduleApproval, oftCurrency, oft, oftUnit, mafiMinimumCurrency, mafiMinimumAmount, bafCurrency, baf, bafUnit, ecaCurrency, eca, ecaUnit, thcCurrency, thc, thcUnit, wfgCurrency, wfg, wfgUnit, docFee, warRisk, bookingNumber, reasonForDecline, internalComments, externalComments;
     private boolean mafiMinimum, bafIncluded, ecaIncluded, thcIncluded, thcAttached, wfgIncluded, wfgAttached, docFeeIncluded, tariff, spot, contract, booking, ftf, decline;
-
+    
     TableView tableView;
 
     /*
@@ -105,37 +103,37 @@ public class NewQuoteFXMLController implements Initializable {
         commodityClass = commodityClassComboBox.getSelectionModel().getSelectedItem().toString();
         handlingInstructions = handlingInstructionsComboBox.getSelectionModel().getSelectedItem().toString();
         commodityDescription = commodityDescriptionTextField.getText();
-        
+
         // Get the operational approval status
-        if(operationalApprovalYesRadioButton.isSelected()){
+        if (operationalApprovalYesRadioButton.isSelected()) {
             operationalApproval = "YES";
-        }else if(operationalApprovalNoRadioButton.isSelected()){
+        } else if (operationalApprovalNoRadioButton.isSelected()) {
             operationalApproval = "NO";
-        }else if(operationalApprovalPendingRadioButton.isSelected()){
+        } else if (operationalApprovalPendingRadioButton.isSelected()) {
             operationalApproval = "PENDING";
-        }else{
+        } else {
             operationalApproval = "N/A";
         }
-        
+
         // Get the overseas approval status
-        if(overseasApprovalYesRadioButton.isSelected()){
-           overseasApproval = "YES";
-        }else if(overseasApprovalNoRadioButton.isSelected()){
+        if (overseasApprovalYesRadioButton.isSelected()) {
+            overseasApproval = "YES";
+        } else if (overseasApprovalNoRadioButton.isSelected()) {
             overseasApproval = "NO";
-        }else if(overseasApprovalPendingRadioButton.isSelected()){
+        } else if (overseasApprovalPendingRadioButton.isSelected()) {
             operationalApproval = "PENDING";
-        }else{
+        } else {
             overseasApproval = "N/A";
         }
-        
+
         // Get the vessel schedule approval status
-        if(vesselScheduleYesRadioButton.isSelected()){
+        if (vesselScheduleYesRadioButton.isSelected()) {
             vesselScheduleApproval = "YES";
-        }else if(vesselScheduleNoRadioButton.isSelected()){
+        } else if (vesselScheduleNoRadioButton.isSelected()) {
             vesselScheduleApproval = "NO";
-        }else if(vesselSchedulePendingRadioButton.isSelected()){
+        } else if (vesselSchedulePendingRadioButton.isSelected()) {
             vesselScheduleApproval = "PENDING";
-        }else{
+        } else {
             vesselScheduleApproval = "N/A";
         }
         oftCurrency = oftCurrencyComboBox.getSelectionModel().getSelectedItem().toString();
@@ -187,8 +185,10 @@ public class NewQuoteFXMLController implements Initializable {
             confirmation.setContentText("Quote ID: RQS" + newQuote + "." + "\n" + "Would you like to email this quote?");
             confirmation.showAndWait().filter(response -> Objects.equals(response, ButtonType.YES)).ifPresent(response -> {
                 try {
-                    new CreatePDF(newQuote, userID, companyName, contactName, contactEmail, contactPhone, phoneExtension, phoneType, tradeLane, pol, pod, tshp, commodityClass, handlingInstructions, commodityDescription, operationalApproval, overseasApproval, vesselScheduleApproval,oftCurrency, oft, oftUnit, mafiMinimum, mafiMinimumCurrency, mafiMinimumAmount, bafCurrency, baf, bafUnit, bafIncluded, ecaCurrency, eca, ecaUnit, ecaIncluded, thcCurrency, thc, thcUnit, thcIncluded, thcAttached, wfgCurrency, wfg, wfgUnit, wfgIncluded, wfgAttached, docFee, docFeeIncluded, warRisk, tariff, spot, contract, booking, bookingNumber, ftf, decline, reasonForDecline, internalComments, externalComments, packingListTable).rateQuote();
-                } catch (FileNotFoundException | DocumentException ex) {
+                    new CreatePDF(newQuote, userID, companyName, contactName, contactEmail, contactPhone, phoneExtension, phoneType, tradeLane, pol, pod, tshp, commodityClass, handlingInstructions, commodityDescription, operationalApproval, overseasApproval, vesselScheduleApproval, oftCurrency, oft, oftUnit, mafiMinimum, mafiMinimumCurrency, mafiMinimumAmount, bafCurrency, baf, bafUnit, bafIncluded, ecaCurrency, eca, ecaUnit, ecaIncluded, thcCurrency, thc, thcUnit, thcIncluded, thcAttached, wfgCurrency, wfg, wfgUnit, wfgIncluded, wfgAttached, docFee, docFeeIncluded, warRisk, tariff, spot, contract, booking, bookingNumber, ftf, decline, reasonForDecline, internalComments, externalComments, packingListTable).rateQuote();
+                } catch (FileNotFoundException ex) {
+                    System.out.println(ex.getMessage());
+                } catch (IOException | DocumentException ex) {
                     System.out.println(ex.getMessage());
                 }
                 confirmation.close();
@@ -235,10 +235,10 @@ public class NewQuoteFXMLController implements Initializable {
             companyNameComboBox.hide();
         }
 
-        Task<Map> task = new Task<Map>() {
+        Task<LinkedHashMap> task = new Task<LinkedHashMap>() {
             @Override
-            protected Map call() throws Exception {
-                Map<String, String> companyInfo = customers(companyNameComboBox.getEditor().getText());
+            protected LinkedHashMap call() throws Exception {
+                LinkedHashMap<String, String> companyInfo = customers(companyNameComboBox.getEditor().getText());
                 return companyInfo;
             }
         };
@@ -247,10 +247,10 @@ public class NewQuoteFXMLController implements Initializable {
         thread.start();
 
         task.setOnSucceeded((WorkerStateEvent t) -> {
-            Map<String, String> companyInfo = task.getValue();
+            LinkedHashMap<String, String> companyInfo = task.getValue();
             companyInfo.forEach((key, value) -> {
                 Platform.runLater(() -> {
-                    companyNameComboBox.getItems().addAll(value);
+                    companyNameComboBox.getItems().addAll(WordUtils.capitalize(value));
                 });
             });
         });
@@ -263,12 +263,12 @@ public class NewQuoteFXMLController implements Initializable {
     * @params String    This string is the input text from the combobox 
     * @results Array    This array is the result of the typed text in the combo box
      */
-    private HashMap<String, String> customers(String input) throws SQLException {
+    private LinkedHashMap<String, String> customers(String input) throws SQLException {
         // Initialize the database connection 
         Connection conn = new DbConnection().connect();
 
         //The array list that will hold the results from the query.
-        HashMap<String, String> results = new HashMap<>();
+        LinkedHashMap<String, String> results = new LinkedHashMap<>();
 
         // Instantiate the  sql statement to be used if there is input or if 
         // This is just the first time that the combobox has been loaded.
@@ -288,6 +288,7 @@ public class NewQuoteFXMLController implements Initializable {
                     do {
                         results.put(rs.getString("ID"), rs.getString("COMPANY_NAME"));
                     } while (rs.next());
+
                 } else {
                     System.out.println("None");
                 }
@@ -314,6 +315,7 @@ public class NewQuoteFXMLController implements Initializable {
                     do {
                         results.put(rs.getString("ID"), rs.getString("COMPANY_NAME"));
                     } while (rs.next());
+
                 }
             } catch (SQLException ex) {
                 System.out.println(ex.getMessage());
